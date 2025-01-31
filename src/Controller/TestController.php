@@ -11,8 +11,25 @@ final class TestController extends AbstractController
     #[Route('/test', name: 'app_test')]
     public function index(): JsonResponse
     {
-        // Faire une requête GET vers le serveur Godot
-        $godotResponse = file_get_contents('http://localhost:8080');
+        // Données à envoyer dans le corps de la requête POST
+        $postData = json_encode([
+            "message" => "Hello from Insomnia!"
+        ]);
+
+        // Configuration de la requête HTTP POST
+        $options = [
+            'http' => [
+                'header'  => "Content-Type: application/json\r\n",
+                'method'  => 'POST',
+                'content' => $postData,
+            ],
+        ];
+
+        // Créer un contexte de flux
+        $context = stream_context_create($options);
+
+        // Faire la requête POST vers le serveur Godot
+        $godotResponse = file_get_contents('http://localhost:8080', false, $context);
 
         // Vérifier si la requête a réussi
         if ($godotResponse === FALSE) {
