@@ -8,8 +8,17 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class TestController extends AbstractController
 {
+    #[Route('/hello', name: 'app_hello')]
+    public function hello(): JsonResponse
+    {
+        return $this->json([
+            'message' => 'Welcome to your new controller!',
+            'path' => 'src/Controller/TestController.php',
+        ]);
+    }
+
     #[Route('/test', name: 'app_test')]
-    public function index(): JsonResponse
+    public function test(): JsonResponse
     {
         // Données à envoyer dans le corps de la requête POST
         $postData = json_encode([
