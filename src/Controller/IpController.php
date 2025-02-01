@@ -28,33 +28,25 @@ final class IpController extends AbstractController
         return new JsonResponse(['message' => 'IP enregistrée et message envoyé']);
     }
 
-    private function sendMessageToClient(string $ip, string $message): void 
+    private function sendMessageToClient(string $ip, string $message): void
 {
-    // Si ton serveur Godot utilise l'IP 192.168.11.211, change cette valeur
-    $url = "http://192.168.11.211:8000/receiveMessage"; 
+    $url = "http://$ip:8000/receiveMessage"; 
     $data = json_encode(['message' => $message]);
 
-    $options = [
-        'http' => [
-            'header'  => "Content-Type: application/json\r\n",
-            'method'  => 'POST',
-            'content' => $data,
-        ],
-    ];
-    
-    // Utiliser stream_context_create pour la configuration
-    $context = stream_context_create($options);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-    // Utiliser file_get_contents avec l'option de contexte
-    $response = @file_get_contents($url, false, $context);
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
 
-    // Ajouter un contrôle pour la réponse (l'erreur ou succès)
     if ($response === false) {
-        // Si la requête échoue
-        error_log("Erreur lors de l'envoi du message à Godot");
+        error_log("Erreur cURL : " . $error);
     } else {
-        // Affiche le contenu de la réponse si elle est reçue
-        error_log("Réponse reçue : " . $response);
+        error_log("Réponse de Godot : " . $response);
     }
 }
 
