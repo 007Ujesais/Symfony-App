@@ -30,24 +30,27 @@ final class IpController extends AbstractController
 
     private function sendMessageToClient(string $ip, string $message): void 
     {
+        file_put_contents('/tmp/debug.log', "Envoi du message vers $ip:8000\n", FILE_APPEND);
+        
         $url = "http://$ip:8000/receiveMessage";
         $data = json_encode(['message' => $message]);
     
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $options = [
+            'http' => [
+                'header'  => "Content-Type: application/json\r\n",
+                'method'  => 'POST',
+                'content' => $data,
+            ],
+        ];
     
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        if (curl_errno($ch)) {
-            file_put_contents('/tmp/debug.log', "❌ cURL erreur: " . curl_error($ch) . "\n", FILE_APPEND);
+        $context = stream_context_create($options);
+        $result = @file_get_contents($url, false, $context);
+    
+        if ($result === false) {
+            $error = error_get_last();
+            file_put_contents('/tmp/debug.log', "Erreur lors de l'envoi : " . json_encode($error) . "\n", FILE_APPEND);
         } else {
-            file_put_contents('/tmp/debug.log', "✅ Message envoyé: HTTP $httpCode | Réponse: $response\n", FILE_APPEND);
+            file_put_contents('/tmp/debug.log', "Message envoyé avec succès : $result\n", FILE_APPEND);
         }
-        
-        curl_close($ch);
     }    
 }
