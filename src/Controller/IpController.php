@@ -29,28 +29,34 @@ final class IpController extends AbstractController
     }
 
     private function sendMessageToClient(string $ip, string $message): void 
-    {
-        file_put_contents('/tmp/debug.log', "Envoi du message vers $ip:8000\n", FILE_APPEND);
-        
-        $url = "http://$ip:8000/receiveMessage";
-        $data = json_encode(['message' => $message]);
+{
+    // Si ton serveur Godot utilise l'IP 192.168.11.211, change cette valeur
+    $url = "http://192.168.11.211:8000/receiveMessage"; 
+    $data = json_encode(['message' => $message]);
+
+    $options = [
+        'http' => [
+            'header'  => "Content-Type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => $data,
+        ],
+    ];
     
-        $options = [
-            'http' => [
-                'header'  => "Content-Type: application/json\r\n",
-                'method'  => 'POST',
-                'content' => $data,
-            ],
-        ];
-    
-        $context = stream_context_create($options);
-        $result = @file_get_contents($url, false, $context);
-    
-        if ($result === false) {
-            $error = error_get_last();
-            file_put_contents('/tmp/debug.log', "Erreur lors de l'envoi : " . json_encode($error) . "\n", FILE_APPEND);
-        } else {
-            file_put_contents('/tmp/debug.log', "Message envoyé avec succès : $result\n", FILE_APPEND);
-        }
-    }    
+    // Utiliser stream_context_create pour la configuration
+    $context = stream_context_create($options);
+
+    // Utiliser file_get_contents avec l'option de contexte
+    $response = @file_get_contents($url, false, $context);
+
+    // Ajouter un contrôle pour la réponse (l'erreur ou succès)
+    if ($response === false) {
+        // Si la requête échoue
+        error_log("Erreur lors de l'envoi du message à Godot");
+    } else {
+        // Affiche le contenu de la réponse si elle est reçue
+        error_log("Réponse reçue : " . $response);
+    }
+}
+
+
 }
