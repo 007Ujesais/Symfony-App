@@ -30,27 +30,24 @@ final class IpController extends AbstractController
 
     private function sendMessageToClient(string $ip, string $message): void
     {
-        $url = "http://$ip:8000/receiveMessage"; 
+        $url = "http://127.0.0.1:8000/receiveMessage"; 
         $data = json_encode(['message' => $message]);
-
+    
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
+    
         $response = curl_exec($ch);
         $error = curl_error($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        error_log("Tentative d'envoi à $url");
-        error_log("Code HTTP : " . $httpCode);
-
+    
         if ($response === false) {
             error_log("Erreur cURL : " . $error);
         } else {
             error_log("Réponse de Godot : " . $response);
         }
     }
+    
 }
