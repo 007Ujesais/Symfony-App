@@ -23,7 +23,7 @@ final class IpController extends AbstractController
         file_put_contents('/tmp/ips.json', json_encode([$ip], JSON_PRETTY_PRINT));
 
         // Envoyer un message "Bonjour" à cette IP
-        $this->sendMessageToClient($ip, "Bonjour");
+        $this->sendMessageToClient($ip, "Bonjour du seveur symfony");
 
         return new JsonResponse(['message' => 'IP enregistrée et message envoyé']);
     }
