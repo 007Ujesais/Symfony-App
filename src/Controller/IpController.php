@@ -28,19 +28,26 @@ final class IpController extends AbstractController
         return new JsonResponse(['message' => 'IP enregistrée et message envoyé']);
     }
 
-    private function sendMessageToClient(string $ip, string $message): void
+    private function sendMessageToClient(string $ip, string $message): void 
     {
-        $url = "http://$ip:8000/receiveMessage"; // Assure-toi que ton client écoute sur ce port
+        $url = "http://$ip:8000/receiveMessage";
         $data = json_encode(['message' => $message]);
-
-        $options = [
-            'http' => [
-                'header'  => "Content-Type: application/json\r\n",
-                'method'  => 'POST',
-                'content' => $data,
-            ],
-        ];
-        $context  = stream_context_create($options);
-        @file_get_contents($url, false, $context);
-    }
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if (curl_errno($ch)) {
+            file_put_contents('/tmp/debug.log', "❌ cURL erreur: " . curl_error($ch) . "\n", FILE_APPEND);
+        } else {
+            file_put_contents('/tmp/debug.log', "✅ Message envoyé: HTTP $httpCode | Réponse: $response\n", FILE_APPEND);
+        }
+        
+        curl_close($ch);
+    }    
 }
