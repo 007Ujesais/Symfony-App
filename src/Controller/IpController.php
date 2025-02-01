@@ -19,36 +19,38 @@ final class IpController extends AbstractController
             return new JsonResponse(['message' => 'IP manquante'], 400);
         }
 
-        // Stocker l'IP dans un fichier
-        file_put_contents('/tmp/ips.json', json_encode([$ip], JSON_PRETTY_PRINT));
+        // Log de l'IP reçue
+        error_log("IP reçue : " . $ip);
 
         // Envoyer un message "Bonjour" à cette IP
-        $this->sendMessageToClient($ip, "Bonjour du seveur symfony");
+        $this->sendMessageToClient($ip, "Bonjour du serveur Symfony");
 
         return new JsonResponse(['message' => 'IP enregistrée et message envoyé']);
     }
 
     private function sendMessageToClient(string $ip, string $message): void
-{
-    $url = "http://$ip:8000/receiveMessage"; 
-    $data = json_encode(['message' => $message]);
+    {
+        $url = "http://$ip:8000/receiveMessage"; 
+        $data = json_encode(['message' => $message]);
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-    $response = curl_exec($ch);
-    $error = curl_error($ch);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-    if ($response === false) {
-        error_log("Erreur cURL : " . $error);
-    } else {
-        error_log("Réponse de Godot : " . $response);
+        error_log("Tentative d'envoi à $url");
+        error_log("Code HTTP : " . $httpCode);
+
+        if ($response === false) {
+            error_log("Erreur cURL : " . $error);
+        } else {
+            error_log("Réponse de Godot : " . $response);
+        }
     }
-}
-
-
 }
