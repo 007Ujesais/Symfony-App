@@ -30,7 +30,7 @@ final class IpController extends AbstractController
 
     private function sendMessageToClient(string $ip, string $message): void
     {
-        $url = "http://127.0.0.1:8000/receiveMessage"; 
+        $url = "http://127.0.0.1:8000/receiveMessage";
         $data = json_encode(['message' => $message]);
     
         $ch = curl_init($url);
