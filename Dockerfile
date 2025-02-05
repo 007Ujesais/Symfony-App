@@ -17,7 +17,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Installer Node.js et npm
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
-    
+
 # Set working directory
 WORKDIR /app
 
@@ -35,6 +35,8 @@ RUN composer require doctrine/dbal
 RUN composer require symfony/serializer
 
 RUN composer require api
+
+RUN composer require symfony/webpack-encore-bundle
 
 RUN npm install
 
