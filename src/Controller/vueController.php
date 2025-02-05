@@ -13,3 +13,4 @@ class VueController extends AbstractController
         return $this->render('vue/index.html.twig');
     }
 }
+

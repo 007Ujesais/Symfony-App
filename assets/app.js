@@ -7,8 +7,11 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './components/App.vue';
+
+createApp(App).mount('#app');
+
 
 new Vue({
     render: h => h(App),
