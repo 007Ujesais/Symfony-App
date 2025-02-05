@@ -12,7 +12,7 @@ final class TestController extends AbstractController
     public function hello(): JsonResponse
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
+            'message' => 'salut',
             'path' => 'src/Controller/TestController.php',
         ]);
     }
