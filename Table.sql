@@ -5,7 +5,14 @@ CREATE TABLE Recette
     photo VARCHAR(255) NOT NULL,
     assets VARCHAR(255) NOT NULL,
     prix INT NOT NULL,
-    tempsCuisson INT NOT NULL,
+    tempsCuisson INT NOT NULL
+);
+CREATE TABLE Ingredient 
+(
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    photo VARCHAR(255) NOT NULL,
+    assets VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Stock 
@@ -14,13 +21,6 @@ CREATE TABLE Stock
     idIngredient INT,
     nombre INT,
     FOREIGN KEY (idIngredient) REFERENCES Ingredient(id)
-);
-CREATE TABLE Ingredient 
-(
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL,
-    photo VARCHAR(255) NOT NULL,
-    assets VARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE RecetteIngredient 
