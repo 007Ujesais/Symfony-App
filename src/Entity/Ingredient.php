@@ -1,35 +1,33 @@
-<?php
-
 namespace App\Entity;
 
-use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: IngredientRepository::class)]
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\IngredientRepository")
+ */
 class Ingredient
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $photo;
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $assets;
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
+    // Getters et setters...
 }
