@@ -32,6 +32,10 @@ RUN composer require symfony/serializer
 
 RUN composer require api
 
+RUN npm install
+
+RUN npm run build
+
 # RUN docker-php-ext-install pdo_pgsql
 
 RUN php bin/console cache:clear
