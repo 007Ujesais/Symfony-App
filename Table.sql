@@ -93,9 +93,3 @@ CREATE TABLE Vente
     FOREIGN KEY (idClient) REFERENCES Client(id),
     FOREIGN KEY (idPlat) REFERENCES Plat (id)
 );
-
-
-    (SID_DESC =
-      (SID_NAME = orcl)        
-      (ORACLE_HOME = C:\app\74677647\product\11.2.0\dbhome_3)  
-    )
