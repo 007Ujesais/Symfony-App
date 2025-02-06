@@ -2,43 +2,91 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\RecetteRepository")
- */
+#[ApiResource]
+#[ORM\Entity(repositoryClass: "App\Repository\RecetteRepository")]
+
 class Recette
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $nom;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $photo;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $assets;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
+    
+    #[ORM\Column(type: "integer", nullable: true)]
     private $prix;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
+    
+    #[ORM\Column(type: "integer", nullable: true)]
     private $tempsCuisson;
+    
 
-    // Getters et setters...
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+        return $this;
+    }
+
+    public function getPhoto(): string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(string $photo): self
+    {
+        $this->photo = $photo;
+        return $this;
+    }
+
+    public function getAssets(): string
+    {
+        return $this->assets;
+    }
+
+    public function setAssets(string $assets): self
+    {
+        $this->assets = $assets;
+        return $this;
+    }
+
+    public function getPrix(): int
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(int $prix): self
+    {
+        $this->prix = $prix;
+        return $this;
+    }
+
+    public function getTempsCuisson(): int
+    {
+        return $this->tempsCuisson;
+    }
+
+    public function setTempsCuisson(int $tempsCuisson): self
+    {
+        $this->tempsCuisson = $tempsCuisson;
+        return $this;
+    }
 }
