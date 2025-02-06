@@ -12,7 +12,7 @@ class SakafoController extends AbstractController
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
     public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
     {
-        $recettes = $recetteRepository->getAll();
+        $recettes = $recetteRepository->AllRecettes();
 
         return $this->json($recettes);
     }
