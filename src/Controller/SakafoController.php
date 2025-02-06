@@ -16,4 +16,15 @@ class SakafoController extends AbstractController
 
         return $this->json($recettes);
     }
+
+    #[Route('/recettes/{id}', name: 'recette_show', methods: ['GET'])]
+    public function show(int $id, RecetteRepository $recetteRepository): JsonResponse
+    {
+        $recette = $recetteRepository->findRecetteById($id);
+        if (!$recette) {
+            return $this->json(['message' => 'Recette non trouvée'], 404);
+        }
+        return $this->json($recette);
+    }
+
 }
