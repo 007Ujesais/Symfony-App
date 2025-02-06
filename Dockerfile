@@ -38,12 +38,6 @@ RUN composer require api
 
 RUN composer require symfony/webpack-encore-bundle
 
-RUN npm install
-
-RUN npm run build
-
-# RUN docker-php-ext-install pdo_pgsql
-
 RUN php bin/console cache:clear
 
 RUN php bin/console cache:clear --env=prod
