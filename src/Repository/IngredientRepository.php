@@ -28,4 +28,20 @@ class IngredientRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function AllIngredient(): array
+    {
+        return $this->createQueryBuilder('i')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findIngredientById(int $id): ?Ingredient
+    {
+        return $this->createQueryBuilder('i')
+            ->where('r.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

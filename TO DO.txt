@@ -1,0 +1,6 @@
+- fonction maka engredients par recette 
+- fonction midesable plat (si un des engredients manque)
+- fonction maka recette rehetra 
+- fonction modifier plat (en cas changement prix nom etc)
+- fonction ajouter plat
+

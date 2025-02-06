@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\RecetteRepository;
+use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,5 +27,16 @@ class SakafoController extends AbstractController
         }
         return $this->json($recette);
     }
+
+    #[Route('/recettesI/{id}', name:'recette_ingredients', methods: ['GET'])]
+    public function getIngredientByRecette(int $id,RecetteIngredientRepository $recetteIngredientRepository): JsonResponse
+    {
+        $recetteIngredients = $recetteIngredientRepository->findIngredientsByRecette($id);
+        if (!$recetteIngredients) {
+            return $this->json(['message' => 'Recette non trouvée'], 404);
+        }
+        return $this->json($recetteIngredients);
+    }
+
 
 }

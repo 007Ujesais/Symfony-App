@@ -19,7 +19,6 @@ class RecetteIngredientRepository extends ServiceEntityRepository
         parent::__construct($registry, RecetteIngredient::class);
     }
 
-    // Exemple d'une méthode personnalisée pour obtenir les ingrédients d'une recette
     public function findIngredientsByRecette($idRecette)
     {
         return $this->createQueryBuilder('ri')
@@ -28,4 +27,6 @@ class RecetteIngredientRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    
 }
