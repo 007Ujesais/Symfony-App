@@ -49,27 +49,46 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        $content = $request->getContent();
-        $data = json_decode($content, true);
+        // Récupérer les données du formulaire
+        $nom = $request->request->get('nom');
+        $prix = $request->request->get('prix');
+        $tempsCuisson = $request->request->get('tempsCuisson');
+        $photo = $request->files->get('photo');
+        $assets = $request->files->get('assets');
     
-        if (!$data) {
-            return new JsonResponse(['error' => 'Données JSON invalides'], 400);
-        }
-    
-        $nom = $data['nom'] ?? null;
-        $prix = $data['prix'] ?? null;
-        $tempsCuisson = $data['tempsCuisson'] ?? null;
-        $photo = $data['photo'] ?? null;
-        $assets = $data['assets'] ?? null;
-    
+        // Vérifier les champs requis
         if (!$nom || !$prix || !$tempsCuisson) {
             return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
         }
     
-        $recette = $recetteRepository->insertPlat($nom,$photo,$assets, $prix, $tempsCuisson);
+        // Traiter les fichiers (exemple : sauvegarder sur le serveur)
+        $photoPath = null;
+        $assetsPath = null;
     
+        if ($photo) {
+            $photoPath = $this->saveFile($photo, 'photo');
+        }
+    
+        if ($assets) {
+            $assetsPath = $this->saveFile($assets, 'assets');
+        }
+    
+        // Insérer la recette
+        $recette = $recetteRepository->insertPlat($nom, $photoPath, $assetsPath, $prix, $tempsCuisson);
+    
+        // Retourner une réponse JSON
         $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
         return $response;
+    }
+    
+    private function saveFile($file, $prefix): string
+    {
+        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+        $fileName = $prefix . '_' . uniqid() . '.' . $file->guessExtension();
+    
+        $file->move($uploadsDir, $fileName);
+    
+        return '/uploads/' . $fileName;
     }
 
     #[Route('/testpost', name: 'test_post', methods: ['POST'])]
