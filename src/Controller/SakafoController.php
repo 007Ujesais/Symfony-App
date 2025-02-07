@@ -57,38 +57,18 @@ class SakafoController extends AbstractController
         $assets = $request->files->get('assets');
     
         // Vérifier les champs requis
-        if (!$nom || !$prix || !$tempsCuisson) {
+        if (!$nom || !$prix || !$tempsCuisson || !$photo || !$assets) {
             return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
         }
     
-        // Traiter les fichiers (exemple : sauvegarder sur le serveur)
-        $photoPath = null;
-        $assetsPath = null;
-    
-        if ($photo) {
-            $photoPath = $this->saveFile($photo, 'photo');
+        try {
+            $recette = $recetteRepository->insertPlat($nom, $photo, $assets, $prix, $tempsCuisson);
+            $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de l’insertion de la recette'], 500);
         }
     
-        if ($assets) {
-            $assetsPath = $this->saveFile($assets, 'assets');
-        }
-    
-        // Insérer la recette
-        $recette = $recetteRepository->insertPlat($nom, $photoPath, $assetsPath, $prix, $tempsCuisson);
-    
-        // Retourner une réponse JSON
-        $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
         return $response;
-    }
-    
-    private function saveFile($file, $prefix): string
-    {
-        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
-        $fileName = $prefix . '_' . uniqid() . '.' . $file->guessExtension();
-    
-        $file->move($uploadsDir, $fileName);
-    
-        return '/uploads/' . $fileName;
     }
 
     #[Route('/testpost', name: 'test_post', methods: ['POST'])]

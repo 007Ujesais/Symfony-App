@@ -37,15 +37,15 @@ class RecetteRepository extends ServiceEntityRepository
     public function insertPlat(string $nom, UploadedFile $photo, UploadedFile $asset, int $prix, int $tempsCuisson): Recette 
     {
         $entityManager = $this->getEntityManager();
-
+    
         // Générer un nom de fichier unique
         $photoFilename = uniqid().'.'.$photo->guessExtension();
         $assetFilename = uniqid().'.'.$asset->guessExtension();
-
+    
         // Déplacer les fichiers vers les dossiers configurés
         $photo->move($this->params->get('recettes_directory'), $photoFilename);
         $asset->move($this->params->get('assets_directory'), $assetFilename);
-
+    
         // Créer et enregistrer l'entité
         $recette = new Recette();
         $recette->setNom($nom)
@@ -53,10 +53,10 @@ class RecetteRepository extends ServiceEntityRepository
                 ->setAssets($assetFilename)
                 ->setPrix($prix)
                 ->setTempsCuisson($tempsCuisson);
-
+    
         $entityManager->persist($recette);
         $entityManager->flush();
-
+    
         return $recette;
     }
 
