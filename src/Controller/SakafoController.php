@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SakafoController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+      $this->logger = $logger;
+    }
+    
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
     public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
     {
