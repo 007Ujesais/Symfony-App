@@ -38,8 +38,8 @@ class RecetteRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
     
-        $recettesDirectory = __DIR__ . '../../uploads/recettes';
-        $assetsDirectory = __DIR__ . '../../uploads/assets';
+        $recettesDirectory = __DIR__ . '/../../public/uploads/recettes';
+        $assetsDirectory = __DIR__ . '/../../public/uploads/assets';
     
         if (!is_dir($recettesDirectory)) 
         {
