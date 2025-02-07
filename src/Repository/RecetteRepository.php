@@ -37,29 +37,26 @@ class RecetteRepository extends ServiceEntityRepository
     public function insertPlat(string $nom, UploadedFile $photo, UploadedFile $asset, int $prix, int $tempsCuisson): Recette 
     {
         $entityManager = $this->getEntityManager();
+
+        $uploadsDir = __DIR__ . '/../../uploads';
+        $recettesDir = $uploadsDir . '/recettes';
+        $assetsDir = $uploadsDir . '/assets'; 
     
-        $recettesDirectory = __DIR__ . '/../../public/uploads/recettes';
-        $assetsDirectory = __DIR__ . '/../../public/uploads/assets';
-    
-        if (!is_dir($recettesDirectory)) {
-            mkdir($recettesDirectory, 0755, true);
+        if (!is_dir($recettesDir)) {
+            mkdir($recettesDir, 0755, true);
         }
-        if (!is_dir($assetsDirectory)) {
-            mkdir($assetsDirectory, 0755, true);
+        if (!is_dir($assetsDir)) {
+            mkdir($assetsDir, 0755, true);
         }
     
-        $photoFilename = uniqid().'.'.$photo->guessExtension();
-        $assetFilename = uniqid().'.'.$asset->guessExtension();
+        $photoFilename = uniqid() . '.' . $photo->guessExtension();
+        $assetFilename = uniqid() . '.' . $asset->guessExtension();
     
-        $photoPath = $recettesDirectory . '/' . $photoFilename;
-        $assetPath = $assetsDirectory . '/' . $assetFilename;
+        $photoPath = $recettesDir . '/' . $photoFilename;
+        $assetPath = $assetsDir . '/' . $assetFilename;
     
-        try {
-            $photo->move($recettesDirectory, $photoFilename);
-            $asset->move($assetsDirectory, $assetFilename);
-        } catch (\Exception $e) {
-            throw new \Exception("Erreur lors du déplacement des fichiers : " . $e->getMessage());
-        }
+        $photo->move($recettesDir, $photoFilename);
+        $asset->move($assetsDir, $assetFilename);
     
         $recette = new Recette();
         $recette->setNom($nom)
