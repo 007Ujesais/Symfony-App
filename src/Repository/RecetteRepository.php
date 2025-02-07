@@ -38,15 +38,30 @@ class RecetteRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
     
-        // Générer un nom de fichier unique
+        $recettesDirectory = __DIR__ . '/../../uploads/recettes';
+        $assetsDirectory = __DIR__ . '/../../uploads/assets';
+    
+        if (!is_dir($recettesDirectory)) 
+        {
+            mkdir($recettesDirectory, 0755, true);
+        }
+        if (!is_dir($assetsDirectory)) {
+            mkdir($assetsDirectory, 0755, true);
+        }
+    
         $photoFilename = uniqid().'.'.$photo->guessExtension();
         $assetFilename = uniqid().'.'.$asset->guessExtension();
     
-        // Déplacer les fichiers vers les dossiers configurés
-        $photo->move($this->params->get('recettes_directory'), $photoFilename);
-        $asset->move($this->params->get('assets_directory'), $assetFilename);
+        $photoPath = $recettesDirectory . '/' . $photoFilename;
+        $assetPath = $assetsDirectory . '/' . $assetFilename;
     
-        // Créer et enregistrer l'entité
+        try {
+            $photo->move($recettesDirectory, $photoFilename);
+            $asset->move($assetsDirectory, $assetFilename);
+        } catch (\Exception $e) {
+            throw new \Exception("Erreur lors du déplacement des fichiers : " . $e->getMessage());
+        }
+    
         $recette = new Recette();
         $recette->setNom($nom)
                 ->setPhoto($photoFilename)

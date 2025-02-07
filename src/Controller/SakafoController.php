@@ -43,23 +43,16 @@ class SakafoController extends AbstractController
     #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
-        // Ajouter les headers CORS
         $response = new JsonResponse();
         $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        // Récupérer les données du formulaire
         $nom = $request->request->get('nom');
         $prix = $request->request->get('prix');
         $tempsCuisson = $request->request->get('tempsCuisson');
         $photo = $request->files->get('photo');
         $assets = $request->files->get('assets');
-    
-        // Vérifier les champs requis
-        if (!$nom || !$prix || !$tempsCuisson || !$photo || !$assets) {
-            return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
-        }
     
         try {
             $recette = $recetteRepository->insertPlat($nom, $photo, $assets, $prix, $tempsCuisson);
@@ -69,16 +62,6 @@ class SakafoController extends AbstractController
         }
     
         return $response;
-    }
-
-    #[Route('/testpost', name: 'test_post', methods: ['POST'])]
-    public function testPost(Request $request): JsonResponse
-    {
-        $data = $request->request->all();
-        return $this->json([
-            'message' => 'Requête POST reçue avec succès',
-            'data' => $data
-        ]);
     }
 
 }
