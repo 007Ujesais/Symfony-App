@@ -39,6 +39,9 @@ class RecetteRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
 
         $uploadsDir = __DIR__ . '/../../uploads';
+        if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0755, true);
+        }
         $recettesDir = $uploadsDir . '/recettes';
         $assetsDir = $uploadsDir . '/assets'; 
     
