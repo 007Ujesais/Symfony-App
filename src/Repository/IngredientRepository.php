@@ -44,4 +44,23 @@ class IngredientRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function insertIngredient(string $nom, UploadedFile $photo, UploadedFile $asset): Ingredient 
+{
+    $entityManager = $this->getEntityManager();
+
+    // Lire les fichiers en binaire
+    $photoBinary = file_get_contents($photo->getPathname());
+    $assetBinary = file_get_contents($asset->getPathname());
+
+    $ingredient = new Ingredient();
+    $ingredient->setNom($nom)
+               ->setPhoto($photoBinary)
+               ->setAssets($assetBinary);
+
+    $entityManager->persist($ingredient);
+    $entityManager->flush();
+
+    return $ingredient;
+}
 }

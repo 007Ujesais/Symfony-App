@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: "App\Repository\RecetteRepository")]
-
 class Recette
 {
     #[ORM\Id]
@@ -16,19 +15,18 @@ class Recette
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $nom;
-    
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
+
+    #[ORM\Column(type: "blob", nullable: true)]
     private $photo;
-    
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
+
+    #[ORM\Column(type: "blob", nullable: true)]
     private $assets;
-    
+
     #[ORM\Column(type: "integer", nullable: true)]
     private $prix;
-    
+
     #[ORM\Column(type: "integer", nullable: true)]
     private $tempsCuisson;
-    
 
     public function getId(): int
     {
@@ -46,23 +44,23 @@ class Recette
         return $this;
     }
 
-    public function getPhoto(): string
+    public function getPhoto()
     {
         return $this->photo;
     }
 
-    public function setPhoto(string $photo): self
+    public function setPhoto($photo): self
     {
         $this->photo = $photo;
         return $this;
     }
 
-    public function getAssets(): string
+    public function getAssets()
     {
         return $this->assets;
     }
 
-    public function setAssets(string $assets): self
+    public function setAssets($assets): self
     {
         $this->assets = $assets;
         return $this;

@@ -37,34 +37,13 @@ class RecetteRepository extends ServiceEntityRepository
     public function insertPlat(string $nom, UploadedFile $photo, UploadedFile $asset, int $prix, int $tempsCuisson): Recette 
     {
         $entityManager = $this->getEntityManager();
-
-        $uploadsDir = '../../uploads';
-        if (!is_dir($uploadsDir)) {
-            mkdir($uploadsDir, 0755, true);
-        }
-        $recettesDir = $uploadsDir . '/recettes';
-        $assetsDir = $uploadsDir . '/assets'; 
-    
-        if (!is_dir($recettesDir)) {
-            mkdir($recettesDir, 0755, true);
-        }
-        if (!is_dir($assetsDir)) {
-            mkdir($assetsDir, 0755, true);
-        }
-    
-        $photoFilename = uniqid() . '.' . $photo->guessExtension();
-        $assetFilename = uniqid() . '.' . $asset->guessExtension();
-    
-        $photoPath = $recettesDir . '/' . $photoFilename;
-        $assetPath = $assetsDir . '/' . $assetFilename;
-    
-        $photo->move($recettesDir, $photoFilename);
-        $asset->move($assetsDir, $assetFilename);
+        $photoBinary = file_get_contents($photo->getPathname());
+        $assetBinary = file_get_contents($asset->getPathname());
     
         $recette = new Recette();
         $recette->setNom($nom)
-                ->setPhoto($photoFilename)
-                ->setAssets($assetFilename)
+                ->setPhoto($photoBinary)
+                ->setAssets($assetBinary)
                 ->setPrix($prix)
                 ->setTempsCuisson($tempsCuisson);
     
