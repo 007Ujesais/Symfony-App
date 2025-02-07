@@ -6,6 +6,7 @@ use App\Repository\RecetteRepository;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SakafoController extends AbstractController
