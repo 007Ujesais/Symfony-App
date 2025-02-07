@@ -43,7 +43,11 @@ class SakafoController extends AbstractController
     #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $content = $request->getContent();
+        dump($content);
+        exit();
+    
+        $data = json_decode($content, true);
 
         if (!$data) {
             return new JsonResponse(['error' => 'Données JSON invalides'], 400);
