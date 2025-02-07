@@ -41,20 +41,21 @@ class SakafoController extends AbstractController
     }
 
     #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
+    #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
-        $content = $request->getContent();
-        dump($content);
-        exit();
+        // Ajouter les headers CORS
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
+        $content = $request->getContent();
         $data = json_decode($content, true);
-
+    
         if (!$data) {
             return new JsonResponse(['error' => 'Données JSON invalides'], 400);
         }
-    
-        dump($data);
-        exit();
     
         $nom = $data['nom'] ?? null;
         $prix = $data['prix'] ?? null;
@@ -64,15 +65,16 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
         }
     
-        $recette = $recetteRepository->insertPlat($nom, $photo, $asset, $prix, $tempsCuisson);
+        $recette = $recetteRepository->insertPlat($nom, $prix, $tempsCuisson);
     
-        return new JsonResponse(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
+        $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
+        return $response;
     }
 
     #[Route('/testpost', name: 'test_post', methods: ['POST'])]
     public function testPost(Request $request): JsonResponse
     {
-        $data = $request->request->all(); // Récupérer les données envoyées
+        $data = $request->request->all();
         return $this->json([
             'message' => 'Requête POST reçue avec succès',
             'data' => $data
