@@ -11,11 +11,12 @@ use Doctrine\Persistence\ManagerRegistry;
 class RecetteRepository extends ServiceEntityRepository
 {
     private $params;
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $params)
     {
         parent::__construct($registry, Recette::class);
         $this->params = $params;
     }
+    
 
     public function AllRecettes(): array
     {
