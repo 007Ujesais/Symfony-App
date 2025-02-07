@@ -40,7 +40,7 @@ class SakafoController extends AbstractController
         return $this->json($recetteIngredients);
     }
 
-    #[Route('/insertplat', name: 'ajouter_recette', methods: ['POST'])]
+    #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
         dump($request->request->all());
