@@ -40,39 +40,25 @@ class SakafoController extends AbstractController
         return $this->json($recetteIngredients);
     }
 
-    #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
+    #[Route('/insertplat', name: 'ajouter_recette', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
-        dump($request->request->all());
-        dump($request->files->all());
-        exit();
+        $data = json_decode($request->getContent(), true);
     
-        $nom = $request->request->get('nom');
-        $prix = (int) $request->request->get('prix');
-        $tempsCuisson = (int) $request->request->get('tempsCuisson');
-        
-        $photo = $request->files->get('photo');
-        $asset = $request->files->get('asset');
-    
-        if (!$photo || !$asset) {
-            return new JsonResponse(['error' => 'Les fichiers sont requis'], 400);
+        if (!$data) {
+            return new JsonResponse(['error' => 'Données JSON invalides'], 400);
         }
     
-        $recette = $recetteRepository->insertPlat($nom, $photo, $asset, $prix, $tempsCuisson);
+        dump($data);
+        exit();
     
-        return new JsonResponse(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
+        $nom = $data['nom'] ?? null;
+        $prix = $data['prix'] ?? null;
+        $tempsCuisson = $data['tempsCuisson'] ?? null;
+    
+        if (!$nom || !$prix || !$tempsCuisson) {
+            return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
+        }
     }
-
-    #[Route('/testpost', name: 'test_post', methods: ['POST'])]
-    public function testPost(Request $request): JsonResponse
-    {
-        $data = $request->request->all(); // Récupérer les données envoyées
-        return $this->json([
-            'message' => 'Requête POST reçue avec succès',
-            'data' => $data
-        ]);
-    }
-
-
 
 }
