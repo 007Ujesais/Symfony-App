@@ -63,5 +63,16 @@ class SakafoController extends AbstractController
         return new JsonResponse(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
     }
 
+    #[Route('/testpost', name: 'test_post', methods: ['POST'])]
+    public function testPost(Request $request): JsonResponse
+    {
+        $data = $request->request->all(); // Récupérer les données envoyées
+        return $this->json([
+            'message' => 'Requête POST reçue avec succès',
+            'data' => $data
+        ]);
+    }
+
+
 
 }
