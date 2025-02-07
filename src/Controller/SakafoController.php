@@ -41,7 +41,6 @@ class SakafoController extends AbstractController
     }
 
     #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
-    #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
         // Ajouter les headers CORS
@@ -60,12 +59,14 @@ class SakafoController extends AbstractController
         $nom = $data['nom'] ?? null;
         $prix = $data['prix'] ?? null;
         $tempsCuisson = $data['tempsCuisson'] ?? null;
+        $photo = $data['photo'] ?? null;
+        $assets = $data['assets'] ?? null;
     
         if (!$nom || !$prix || !$tempsCuisson) {
             return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
         }
     
-        $recette = $recetteRepository->insertPlat($nom, $prix, $tempsCuisson);
+        $recette = $recetteRepository->insertPlat($nom,$photo,$assets, $prix, $tempsCuisson);
     
         $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
         return $response;
