@@ -64,4 +64,26 @@ class SakafoController extends AbstractController
         return $response;
     }
 
+    #[Route('/insertingredient', name: 'insertIngredient', methods: ['POST'])]
+    public function ajouterIngredient(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+    
+        $nom = $request->request->get('nom');
+        $photo = $request->files->get('photo');
+        $assets = $request->files->get('assets');
+    
+        try {
+            $ingredient = $ingredientRepository->insertIngredient($nom, $photo, $assets);
+            $response->setData(['message' => 'Ingredient ajoutée', 'ingredient' => $ingredient->getId()]);
+        }  catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    
+        return $response;
+    }
+
 }

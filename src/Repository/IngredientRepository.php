@@ -49,7 +49,6 @@ class IngredientRepository extends ServiceEntityRepository
 {
     $entityManager = $this->getEntityManager();
 
-    // Lire les fichiers en binaire
     $photoBinary = file_get_contents($photo->getPathname());
     $assetBinary = file_get_contents($asset->getPathname());
 
