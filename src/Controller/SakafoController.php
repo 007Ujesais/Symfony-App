@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SakafoController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+      $this->logger = $logger;
+    }
+    
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
     public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
     {
@@ -57,8 +64,8 @@ class SakafoController extends AbstractController
         try {
             $recette = $recetteRepository->insertPlat($nom, $photo, $assets, $prix, $tempsCuisson);
             $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Erreur lors de l’insertion de la recette'], 500);
+        }  catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
         }
     
         return $response;
