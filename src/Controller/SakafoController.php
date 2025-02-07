@@ -41,19 +41,23 @@ class SakafoController extends AbstractController
     #[Route('/insertrecette', name: 'ajouter_recette', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
+        dump($request->request->all());
+        dump($request->files->all());
+        exit();
+    
         $nom = $request->request->get('nom');
         $prix = (int) $request->request->get('prix');
         $tempsCuisson = (int) $request->request->get('tempsCuisson');
         
         $photo = $request->files->get('photo');
         $asset = $request->files->get('asset');
-
+    
         if (!$photo || !$asset) {
             return new JsonResponse(['error' => 'Les fichiers sont requis'], 400);
         }
-
+    
         $recette = $recetteRepository->insertPlat($nom, $photo, $asset, $prix, $tempsCuisson);
-
+    
         return new JsonResponse(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
     }
 
