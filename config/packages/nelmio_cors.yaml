@@ -8,7 +8,7 @@ nelmio_cors:
         max_age: 3600
     paths:
         '^/api/':
-            allow_origin: ['http://localhost:5173/']
+            allow_origin: ['https://cuisine-vue-js-git-main-toojonarivs-projects.vercel.app/']
             allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
             allow_headers: ['Content-Type', 'Authorization']
             max_age: 3600

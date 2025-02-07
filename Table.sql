@@ -94,9 +94,7 @@ CREATE TABLE PlatLivrer
 CREATE TABLE Vente 
 (
     id SERIAL PRIMARY KEY,
-    idClient INT NOT NULL,
     idRecette INT NOT NULL,
     dateAchat date,
-    FOREIGN KEY (idClient) REFERENCES Client(id),
     FOREIGN KEY (idRecette) REFERENCES Recette (id)
 );
