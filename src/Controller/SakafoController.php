@@ -40,11 +40,11 @@ class SakafoController extends AbstractController
         return $this->json($recetteIngredients);
     }
 
-    #[Route('/insertplat', name: 'ajouter_recette', methods: ['POST'])]
+    #[Route('/insertplat', name: 'insertPlat', methods: ['POST'])]
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-    
+
         if (!$data) {
             return new JsonResponse(['error' => 'Données JSON invalides'], 400);
         }
@@ -59,6 +59,9 @@ class SakafoController extends AbstractController
         if (!$nom || !$prix || !$tempsCuisson) {
             return new JsonResponse(['error' => 'Tous les champs sont requis'], 400);
         }
+    
+        $recette = $recetteRepository->insertPlat($nom, $photo, $asset, $prix, $tempsCuisson);
+    
+        return new JsonResponse(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
     }
-
 }
