@@ -73,7 +73,7 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        $nom = $request->request->get('nom');
+        $nom = $request->request->get('nomingredient') ?? null;
         $photo = $request->files->get('photo');
         $assets = $request->files->get('assets');
     
