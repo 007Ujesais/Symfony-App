@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Ingredient;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -51,16 +52,13 @@ class IngredientRepository extends ServiceEntityRepository
     public function insertIngredient(string $nom, UploadedFile $photo, UploadedFile $assets): Ingredient 
     {
         $entityManager = $this->getEntityManager();
-    
-        // Lire les fichiers en binaire
         $photoBinary = file_get_contents($photo->getPathname());
         $assetsBinary = file_get_contents($assets->getPathname());
     
-        // Créer et enregistrer l'entité
         $ingredient = new Ingredient();
         $ingredient->setNom($nom)
-                   ->setPhoto($photoBinary) // Stocker la photo en binaire
-                   ->setAssets($assetsBinary); // Stocker l'asset en binaire
+                   ->setPhoto($photoBinary)
+                   ->setAssets($assetsBinary);
     
         $entityManager->persist($ingredient);
         $entityManager->flush();
