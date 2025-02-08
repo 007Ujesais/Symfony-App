@@ -38,6 +38,8 @@ RUN composer require api
 
 RUN composer require symfony/webpack-encore-bundle
 
+RUN composer require symfony/security-bundle
+
 RUN php bin/console cache:clear
 
 RUN php bin/console cache:clear --env=prod

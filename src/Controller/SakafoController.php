@@ -13,12 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 class SakafoController extends AbstractController
 {
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
-    public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
-    {
-        $recettes = $recetteRepository->AllRecettes();
+public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
+{
+    $recettes = $recetteRepository->AllRecettes();
 
-        return $this->json($recettes);
-    }
+    return $this->json($recettes, 200, [], []);
+}
+
 
     #[Route('/recettes/{id}', name: 'recette_show', methods: ['GET'])]
     public function show(int $id, RecetteRepository $recetteRepository): JsonResponse
