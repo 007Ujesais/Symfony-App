@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Ingredient;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,9 +16,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class IngredientRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $params;
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $params)
     {
-        parent::__construct($registry, Ingredient::class);
+        parent::__construct($registry, Recette::class);
+        $this->params = $params;
     }
 
     // Exemple d'une méthode personnalisée pour rechercher un ingrédient par nom
@@ -43,5 +47,22 @@ class IngredientRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function insertIngredient(string $nom, UploadedFile $photo, UploadedFile $assets): Ingredient 
+    {
+        $entityManager = $this->getEntityManager();
+        $photoBinary = file_get_contents($photo->getPathname());
+        $assetsBinary = file_get_contents($assets->getPathname());
+    
+        $ingredient = new Ingredient();
+        $ingredient->setNom($nom)
+                   ->setPhoto($photoBinary)
+                   ->setAssets($assetsBinary);
+    
+        $entityManager->persist($ingredient);
+        $entityManager->flush();
+    
+        return $ingredient;
     }
 }

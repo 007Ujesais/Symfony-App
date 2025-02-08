@@ -17,10 +17,10 @@ class Ingredient
     #[ORM\Column(type: "string", length: 255)]
     private $nom;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: "blob", nullable: true)]
     private $photo;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: "blob", nullable: true)]
     private $assets;
 
     public function getId(): int
@@ -39,23 +39,23 @@ class Ingredient
         return $this;
     }
 
-    public function getPhoto(): string
+    public function getPhoto()
     {
         return $this->photo;
     }
 
-    public function setPhoto(string $photo): self
+    public function setPhoto($photo): self
     {
         $this->photo = $photo;
         return $this;
     }
 
-    public function getAssets(): string
+    public function getAssets()
     {
         return $this->assets;
     }
 
-    public function setAssets(string $assets): self
+    public function setAssets($assets): self
     {
         $this->assets = $assets;
         return $this;

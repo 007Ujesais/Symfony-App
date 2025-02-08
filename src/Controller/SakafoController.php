@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\RecetteRepository;
+use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,7 +46,7 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
     public function ajouterRecette(Request $request, RecetteRepository $recetteRepository): JsonResponse
     {
         $response = new JsonResponse();
-        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
@@ -58,8 +59,30 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
         try {
             $recette = $recetteRepository->insertPlat($nom, $photo, $assets, $prix, $tempsCuisson);
             $response->setData(['message' => 'Recette ajoutée', 'recette' => $recette->getId()]);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Erreur lors de l’insertion de la recette'], 500);
+        }  catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    
+        return $response;
+    }
+
+    #[Route('/insertingredient', name: 'insertIngredient', methods: ['POST'])]
+    public function ajouterIngredient(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+    
+        $nom = $request->request->get('nomingredient') ?? null;
+        $photo = $request->files->get('photo');
+        $assets = $request->files->get('assets');
+    
+        try {
+            $ingredient = $ingredientRepository->insertIngredient($nom, $photo, $assets);
+            $response->setData(['message' => 'Ingredient ajoutée', 'ingredient' => $ingredient->getId()]);
+        }  catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
         }
     
         return $response;
