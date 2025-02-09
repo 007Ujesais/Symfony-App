@@ -121,7 +121,7 @@ class SakafoController extends AbstractController
     }
 
     #[Route('/platbyname', name: 'platByName', methods: ['GET'])]
-    public function getPlatByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    public function getPlatByName(Request $request, PlatRepository $platRepository): JsonResponse    
     {
         $nom = $request->query->get('nom');
     
