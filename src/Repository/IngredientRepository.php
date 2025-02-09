@@ -20,11 +20,13 @@ class IngredientRepository extends ServiceEntityRepository
     public function findIngredientsByName(string $nom): array
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.nom = :nom')
-            ->setParameter('nom', $nom)
+            ->andWhere('LOWER(i.nom) LIKE LOWER(:nom)')
+            ->setParameter('nom', $nom . '%')
+            ->orderBy('i.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }
+    
     
 
     public function AllIngredient(): array
