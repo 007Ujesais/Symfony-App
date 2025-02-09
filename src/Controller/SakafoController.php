@@ -126,7 +126,7 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
 
-        $ingredientId = $request->request->get('ingredientId');
+        $ingredientId = $request->request->get('id');
         $nombre = $request->request->get('nombre');
         
         if (!$ingredientId || !$nombre) {
