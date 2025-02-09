@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
@@ -121,6 +122,10 @@ class SakafoController extends AbstractController
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
     {
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+
         $ingredientId = $request->request->get('ingredientId');
         $nombre = $request->request->get('nombre');
         
@@ -131,7 +136,6 @@ class SakafoController extends AbstractController
         try {
             $stock = $stockRepository->insertOrUpdateStock((int) $ingredientId, (int) $nombre);
             return new JsonResponse([
-                'message' => 'Stock mis à jour avec succès.',
                 'stock' => [
                     'ingredientId' => $stock->getIngredient()->getId(),
                     'nombre' => $stock->getNombre()
