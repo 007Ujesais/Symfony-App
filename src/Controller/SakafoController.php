@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Controller;
 
-use App\Entity\Ingredient;
 use App\Repository\RecetteRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
@@ -14,11 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 class SakafoController extends AbstractController
 {
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
-    public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
-    {
-        $recettes = $recetteRepository->AllRecettes();
-        return $this->json($recettes, 200, [], []);
-    }
+public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
+{
+    $recettes = $recetteRepository->AllRecettes();
+
+    return $this->json($recettes, 200, [], []);
+}
 
 
     #[Route('/recettes/{id}', name: 'recette_show', methods: ['GET'])]
@@ -73,13 +74,9 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        $nom = $request->request->get('nom');
+        $nom = $request->request->get('nomingredient') ?? null;
         $photo = $request->files->get('photo');
         $assets = $request->files->get('assets');
-    
-        if (!$nom || !$photo || !$assets) {
-            return new JsonResponse(['error' => 'Missing data'], 400);
-        }
     
         try {
             $ingredient = $ingredientRepository->insertIngredient($nom, $photo, $assets);
@@ -87,33 +84,8 @@ class SakafoController extends AbstractController
         }  catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
+    
         return $response;
     }
 
-    #[Route('/ingredientbyname', name: 'ingredientByName', methods: ['GET'])]
-    public function getIngredientByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
-    {
-        $nom = $request->query->get('nom');
-    
-        if (!$nom) {
-            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-    
-        $ingredients = $ingredientRepository->findIngredientsByName($nom);
-    
-        if (!$ingredients) {
-            return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
-        }
-    
-        $data = array_map(function (Ingredient $ingredient) {
-            return [
-                'id' => $ingredient->getId(),
-                'nom' => $ingredient->getNom(),
-                'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
-                'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
-            ];
-        }, $ingredients);
-    
-        return new JsonResponse($data);
-    }
 }
