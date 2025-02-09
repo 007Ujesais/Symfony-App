@@ -31,7 +31,7 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
     #[Route('/ventes', name: 'getVentes', methods: ['GET'])]
     public function getAllVentes(VenteRepository $venteRepository): JsonResponse
     {
-        $vente = $venteRepository->Allvente();
+        $vente = $venteRepository->AllVentes();
         return $this->json($vente, 200, [], []);
     }
 
