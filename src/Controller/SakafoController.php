@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Repository\Ingredient;
+use App\Repository\Recette;
+use App\Repository\RecetteIngredient;
+use App\Repository\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\VenteRepository;
 use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
-use App\Repository\Ingredient;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -84,9 +87,13 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        $nom = $request->request->get('nomingredient') ?? null;
+        $nom = $request->request->get('nom');
         $photo = $request->files->get('photo');
         $assets = $request->files->get('assets');
+
+        if (!$nom || !$photo || !$assets) {
+            return new JsonResponse(['error' => 'Missing data'], 400);
+        }
     
         try {
             $ingredient = $ingredientRepository->insertIngredient($nom, $photo, $assets);
@@ -113,7 +120,8 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(function (IngredientRepository $ingredient) {
+        $data = array_map(function (Ingredient $ingredient) 
+        {
             return [
                 'id' => $ingredient->getId(),
                 'nom' => $ingredient->getNom(),
@@ -125,6 +133,27 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
         return new JsonResponse($data);
     }
 
+    public function getPhoto(): ?string
+    {
+        if (is_resource($this->photo)) {
+            rewind($this->photo);
+            return base64_encode(stream_get_contents($this->photo));
+        } elseif (is_string($this->photo)) {
+            return base64_encode($this->photo);
+        }
+        return null;
+    }
+
+    public function getAssets(): ?string
+    {
+        if (is_resource($this->assets)) {
+            rewind($this->assets);
+            return base64_encode(stream_get_contents($this->assets));
+        } elseif (is_string($this->assets)) {
+            return base64_encode($this->assets);
+        }
+        return null;
+    }
     
 
 
@@ -143,7 +172,7 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(fn(RecetteRepository $plat) => [
+        $data = array_map(fn(Recette $plat) => [
             'id' => $plat->getId(),
             'nom' => $plat->getNom(),
             'prix' => $plat->getPrix(),
