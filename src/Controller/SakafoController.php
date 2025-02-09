@@ -122,9 +122,13 @@ class SakafoController extends AbstractController
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $ingredientId = $data['id'] ?? null;
-        $nombre = $data['nombre'] ?? null;
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+    
+        $ingredientId = $request->request->get('id');
+        $nombre = $request->files->get('nombre');
         
         
         if (!$ingredientId || !$nombre) {
