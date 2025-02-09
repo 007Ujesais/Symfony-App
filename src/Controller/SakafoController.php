@@ -55,8 +55,8 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
             return $this->json(['message' => 'Recette non trouvée'], 404);
         }
         $imageBase64 = null;
-        if ($recette->getImage()) {
-            $imageBase64 = base64_encode(stream_get_contents($recette->getImage()));
+        if ($recette->getPhoto()) {
+            $imageBase64 = $imageBase64 = base64_encode($recette->getPhoto());
         }
         $data = [
             'id' => $recette->getId(),
