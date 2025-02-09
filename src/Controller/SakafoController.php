@@ -5,6 +5,7 @@ use App\Entity\Ingredient;
 use App\Entity\Recette;
 use App\Entity\Stock;
 use App\Repository\RecetteRepository;
+use App\Repository\VenteRepository;
 use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
@@ -21,6 +22,13 @@ class SakafoController extends AbstractController
     {
         $recettes = $recetteRepository->AllRecettes();
         return $this->json($recettes, 200, [], []);
+    }
+
+    #[Route('/ventes', name: 'getVentes', methods: ['GET'])]
+    public function getAllVentes(VenteRepository $venteRepository): JsonResponse
+    {
+        $vente = $venteRepository->Allvente();
+        return $this->json($vente, 200, [], []);
     }
 
 

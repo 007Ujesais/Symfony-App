@@ -46,7 +46,7 @@ class Recette
     public function getPhoto(): ?string
     {
         if (is_resource($this->photo)) {
-            rewind($this->photo); // Remettre le pointeur au début de la ressource
+            rewind($this->photo);
             return base64_encode(stream_get_contents($this->photo));
         }
         return null;
@@ -55,7 +55,7 @@ class Recette
     public function getAssets(): ?string
     {
         if (is_resource($this->assets)) {
-            rewind($this->assets); // Remettre le pointeur au début de la ressource
+            rewind($this->assets);
             return base64_encode(stream_get_contents($this->assets));
         }
         return null;
