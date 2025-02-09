@@ -17,14 +17,15 @@ class IngredientRepository extends ServiceEntityRepository
         $this->params = $params;
     }
 
-    public function findIngredientByName(string $nom): ?Ingredient
+    public function findIngredientsByName(string $nom): array
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.nom = :nom')
             ->setParameter('nom', $nom)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
+    
 
     public function AllIngredient(): array
     {
