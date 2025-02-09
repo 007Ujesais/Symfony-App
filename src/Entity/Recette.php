@@ -43,22 +43,29 @@ class Recette
         $this->nom = $nom;
         return $this;
     }
-
-    public function getPhoto()
+    public function getPhoto(): ?string
     {
-        return $this->photo;
+        if (is_resource($this->photo)) {
+            rewind($this->photo); // Remettre le pointeur au début de la ressource
+            return base64_encode(stream_get_contents($this->photo));
+        }
+        return null;
     }
 
-    public function setPhoto($photo): self
+    public function getAssets(): ?string
     {
-        $this->photo = $photo;
-        return $this;
+        if (is_resource($this->assets)) {
+            rewind($this->assets); // Remettre le pointeur au début de la ressource
+            return base64_encode(stream_get_contents($this->assets));
+        }
+        return null;
     }
-
-    public function getAssets()
-    {
-        return $this->assets;
-    }
+    
+        public function setPhoto($photo): self
+        {
+            $this->photo = $photo;
+            return $this;
+        }
 
     public function setAssets($assets): self
     {
