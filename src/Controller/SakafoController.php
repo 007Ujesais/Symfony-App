@@ -95,12 +95,7 @@ class SakafoController extends AbstractController
     #[Route('/ingredientbyname', name: 'ingredientByName', methods: ['GET'])]
     public function getIngredientByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
-        $nom = $request->query->get('nom');
-    
-        if (!$nom) {
-            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-    
+        $nom = $request->query->get('nom'); 
         $ingredients = $ingredientRepository->findIngredientsByName($nom);
     
         if (!$ingredients) {
