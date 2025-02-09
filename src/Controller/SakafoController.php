@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
-use App\Entity\Recette;
 use App\Entity\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\StockRepository;
@@ -98,8 +97,7 @@ class SakafoController extends AbstractController
     {
         $nom = $request->query->get('nom');
     
-        if (!$nom) 
-        {
+        if (!$nom) {
             return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
         }
     
@@ -121,7 +119,7 @@ class SakafoController extends AbstractController
         return new JsonResponse($data);
     }
 
-    #[Route('/platbyname', name: 'ingredientByName', methods: ['GET'])]
+    #[Route('/platbyname', name: 'platByName', methods: ['GET'])]
     public function getPlatByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         $nom = $request->query->get('nom');
@@ -133,15 +131,13 @@ class SakafoController extends AbstractController
         $plat = $ingredientRepository->findPlatByName($nom);
     
         if (!$plat) {
-            return new JsonResponse(['error' => 'Aucun plat trouvé.'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
         $data = array_map(function (Ingredient $ingredient) {
             return [
                 'id' => $ingredient->getId(),
                 'nom' => $ingredient->getNom(),
-                'prix' => $ingredient->getPrix(),
-                'temps_cuisson' => $ingredient->getTempsCuisson(),
                 'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
                 'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
             ];
