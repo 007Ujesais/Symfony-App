@@ -128,7 +128,7 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
         $ingredientId = $request->request->get('id');
-        $nombre = $request->files->get('nombre');
+        $nombre = $request->request->get('nombre');
         
         
         if (!$ingredientId || !$nombre) {
