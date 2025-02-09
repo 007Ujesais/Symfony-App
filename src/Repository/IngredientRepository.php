@@ -8,22 +8,15 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Ingredient|null find($id, $lockMode = null, $lockVersion = null)
- * @method Ingredient|null findOneBy(array $criteria, array $orderBy = null)
- * @method Ingredient[]    findAll()
- * @method Ingredient[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class IngredientRepository extends ServiceEntityRepository
 {
     private $params;
     public function __construct(ManagerRegistry $registry, ParameterBagInterface $params)
     {
-        parent::__construct($registry, Recette::class);
+        parent::__construct($registry, Ingredient::class);
         $this->params = $params;
     }
 
-    // Exemple d'une méthode personnalisée pour rechercher un ingrédient par nom
     public function findIngredientByName($nom)
     {
         return $this->createQueryBuilder('i')
