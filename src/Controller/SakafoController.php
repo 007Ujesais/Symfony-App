@@ -46,6 +46,29 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
         return $this->json($recette);
     }
 
+    #[Route('/recettesbyid/{id}', name: 'recette_show', methods: ['GET'])]
+    public function show2(int $id, RecetteRepository $recetteRepository): JsonResponse
+    {
+        $recette = $recetteRepository->findRecetteById($id);
+
+        if (!$recette) {
+            return $this->json(['message' => 'Recette non trouvée'], 404);
+        }
+        $imageBase64 = null;
+        if ($recette->getImage()) {
+            $imageBase64 = base64_encode(stream_get_contents($recette->getImage()));
+        }
+        $data = [
+            'id' => $recette->getId(),
+            'nom' => $recette->getNom(),
+            'prix' => $recette->getPrix(),
+            'image' => $imageBase64 ? 'data:image/png;base64,' . $imageBase64 : null
+        ];
+
+        return $this->json($data);
+    }
+
+
     #[Route('/recettesI/{id}', name:'recette_ingredients', methods: ['GET'])]
     public function getIngredientByRecette(int $id,RecetteIngredientRepository $recetteIngredientRepository): JsonResponse
     {
