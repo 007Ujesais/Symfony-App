@@ -122,15 +122,13 @@ class SakafoController extends AbstractController
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
     {
-        $response = new JsonResponse();
-        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
-        $response->headers->set('Access-Control-Allow-Methods', 'POST');
-
-        $ingredientId = $request->request->get('id');
-        $nombre = $request->request->get('nombre');
+        $data = json_decode($request->getContent(), true);
+        $ingredientId = $data['id'] ?? null;
+        $nombre = $data['nombre'] ?? null;
+        
         
         if (!$ingredientId || !$nombre) {
-            return new JsonResponse(['error' => 'Les paramètres "ingredientId" et "nombre" sont requis.'], 400);
+            return new JsonResponse(['error' => 'Les paramètres "id" et "nombre" sont requis.'], 400);
         }
         
         try {
