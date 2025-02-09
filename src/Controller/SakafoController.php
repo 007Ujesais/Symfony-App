@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Repository\Ingredient;
-use App\Repository\Recette;
-use App\Repository\RecetteIngredient;
-use App\Repository\Stock;
+use App\Entity\Ingredient;
+use App\Entity\Recette;
+use App\Entity\RecetteIngredient;
+use App\Entity\Stock;
+use App\Entity\Vente;
 use App\Repository\RecetteRepository;
 use App\Repository\VenteRepository;
 use App\Repository\StockRepository;
