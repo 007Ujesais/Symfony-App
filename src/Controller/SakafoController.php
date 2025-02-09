@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\Recette;
 use App\Entity\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\StockRepository;
@@ -95,7 +96,13 @@ class SakafoController extends AbstractController
     #[Route('/ingredientbyname', name: 'ingredientByName', methods: ['GET'])]
     public function getIngredientByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
-        $nom = $request->query->get('nom'); 
+        $nom = $request->query->get('nom');
+    
+        if (!$nom) 
+        {
+            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+    
         $ingredients = $ingredientRepository->findIngredientsByName($nom);
     
         if (!$ingredients) {
@@ -133,8 +140,8 @@ class SakafoController extends AbstractController
             return [
                 'id' => $ingredient->getId(),
                 'nom' => $ingredient->getNom(),
-                'nom' => $ingredient->getPrix(),
-                'nom' => $ingredient->getTempsCuisson(),
+                'prix' => $ingredient->getPrix(),
+                'temps_cuisson' => $ingredient->getTempsCuisson(),
                 'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
                 'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
             ];
