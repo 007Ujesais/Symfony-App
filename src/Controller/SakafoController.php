@@ -201,7 +201,7 @@ class SakafoController extends AbstractController
     }
 
     #[Route('/creerecette', name: 'creerecette', methods: ['POST'])]
-    public function createRecette(Request $request): JsonResponse
+    public function createRecette(Request $request, RecetteIngredientRepository $recetteIngredientRepository): JsonResponse
     {
         $recetteId = $request->request->get('dishId');
         $ingredients = $request->request->get('ingredients');
