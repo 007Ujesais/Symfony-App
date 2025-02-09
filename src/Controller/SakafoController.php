@@ -120,7 +120,7 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(function (Ingredient $ingredient) {
+        $data = array_map(function (IngredientRepository $ingredient) {
             return [
                 'id' => $ingredient->getId(),
                 'nom' => $ingredient->getNom(),
@@ -171,7 +171,7 @@ public function getAllRecettes(RecetteRepository $recetteRepository): JsonRespon
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(fn(Recette $plat) => [
+        $data = array_map(fn(RecetteRepository $plat) => [
             'id' => $plat->getId(),
             'nom' => $plat->getNom(),
             'prix' => $plat->getPrix(),
