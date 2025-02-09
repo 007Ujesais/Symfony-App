@@ -135,19 +135,13 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(function (Recette $plat) {
-            return [
-                'id' => $plat->getId(),
-                'nom' => $plat->getNom(),
-                'prix' => $plat->getPrix(),
-                'temps_cuisson' => $plat->getTempsCuisson(),
-                'photo' => $plat->getPhoto() ? base64_encode(stream_get_contents($plat->getPhoto())) : null,
-                'assets' => $plat->getAssets() ? base64_encode(stream_get_contents($plat->getAssets())) : null
-            ];
-        }, $plat);
+        $data = array_map(fn(Recette $plat) => [
+            'nom' => $plat->getNom(),
+        ], $plat);
     
         return new JsonResponse($data);
     }
+    
 
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
@@ -173,6 +167,34 @@ class SakafoController extends AbstractController
                     'nombre' => $stock->getNombre()
                 ]
             ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/creerecette', name: 'creerecette', methods: ['POST'])]
+    public function createRecette(Request $request): JsonResponse
+    {
+        $recetteId = $request->request->get('idPlat');
+        $ingredients = $request->request->get('ingredients');
+
+        if (!$recetteId || !$ingredients) {
+            return new JsonResponse(['error' => 'Les paramètres "dishId" et "ingredients" sont requis.'], 400);
+        }
+
+        try {
+            // Convertir les ingrédients en tableau
+            $ingredients = json_decode($ingredients, true);
+
+            foreach ($ingredients as $ingredient) {
+                $this->recetteIngredientRepository->insertRecetteIngredient(
+                    $recetteId,
+                    $ingredient['ingredientId'],
+                    $ingredient['quantity']
+                );
+            }
+
+            return new JsonResponse(['message' => 'RecetteIngredient créé avec succès.'], 201);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
