@@ -16,13 +16,13 @@ class VenteRepository extends ServiceEntityRepository
     public function AllVentes(): array
     {
         return $this->createQueryBuilder('v')
-            ->select('DISTINCT r')
             ->innerJoin('v.recette', 'r') 
+            ->addSelect('DISTINCT r')
             ->orderBy('r.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }
-
+    
     public function findVenteByName(string $nom): array
     {
         return $this->createQueryBuilder('v')
