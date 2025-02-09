@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Ingredient;
 use App\Repository\RecetteRepository;
+use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -115,5 +116,29 @@ class SakafoController extends AbstractController
         }, $ingredients);
     
         return new JsonResponse($data);
+    }
+
+    #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
+    public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
+    {
+        $ingredientId = $request->request->get('ingredientId');
+        $nombre = $request->request->get('nombre');
+        
+        if (!$ingredientId || !$nombre) {
+            return new JsonResponse(['error' => 'Les paramètres "ingredientId" et "nombre" sont requis.'], 400);
+        }
+        
+        try {
+            $stock = $stockRepository->insertOrUpdateStock((int) $ingredientId, (int) $nombre);
+            return new JsonResponse([
+                'message' => 'Stock mis à jour avec succès.',
+                'stock' => [
+                    'ingredientId' => $stock->getIngredient()->getId(),
+                    'nombre' => $stock->getNombre()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
     }
 }
