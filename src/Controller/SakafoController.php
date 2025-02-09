@@ -120,7 +120,7 @@ class SakafoController extends AbstractController
         return new JsonResponse($data);
     }
 
-    public function getP(): ?string
+    public function getPhoto(): ?string
     {
         if (is_resource($this->photo)) {
             rewind($this->photo);
@@ -131,7 +131,7 @@ class SakafoController extends AbstractController
         return null;
     }
 
-    public function getA(): ?string
+    public function getAssets(): ?string
     {
         if (is_resource($this->assets)) {
             rewind($this->assets);
@@ -163,9 +163,10 @@ class SakafoController extends AbstractController
             'nom' => $plat->getNom(),
             'prix' => $plat->getPrix(),
             'temps_cuisson' => $plat->getTempsCuisson(),
-            'photo' => $plat->getP(),
-            'assets' => $plat->getA()
-        ], $plat);        
+            'photo' => $plat->getPhoto(),
+            'assets' => $plat->getAssets()
+        ], $plat);
+        
     
         return new JsonResponse($data);
     }
