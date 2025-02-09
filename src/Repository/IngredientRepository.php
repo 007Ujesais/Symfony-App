@@ -45,6 +45,11 @@ class IngredientRepository extends ServiceEntityRepository
     public function insertIngredient(string $nom, UploadedFile $photo, UploadedFile $assets): Ingredient 
     {
         $entityManager = $this->getEntityManager();
+        
+        if (!$photo || !$assets) {
+            throw new \Exception('Photo or assets file is missing');
+        }
+    
         $photoBinary = file_get_contents($photo->getPathname());
         $assetsBinary = file_get_contents($assets->getPathname());
     
