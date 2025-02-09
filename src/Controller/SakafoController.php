@@ -69,7 +69,7 @@ class SakafoController extends AbstractController
     public function ajouterIngredient(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         $response = new JsonResponse();
-        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5174');
+        $response->headers->set('Access-Control-Allow-Origin', 'https://nahandro.vercel.app');
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
