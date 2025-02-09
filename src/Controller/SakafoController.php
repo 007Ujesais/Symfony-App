@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\Recette;
 use App\Entity\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\StockRepository;
