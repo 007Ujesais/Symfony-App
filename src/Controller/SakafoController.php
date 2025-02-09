@@ -120,6 +120,29 @@ class SakafoController extends AbstractController
         return new JsonResponse($data);
     }
 
+    public function getP(): ?string
+    {
+        if (is_resource($this->photo)) {
+            rewind($this->photo);
+            return base64_encode(stream_get_contents($this->photo));
+        } elseif (is_string($this->photo)) {
+            return base64_encode($this->photo);
+        }
+        return null;
+    }
+
+    public function getA(): ?string
+    {
+        if (is_resource($this->assets)) {
+            rewind($this->assets);
+            return base64_encode(stream_get_contents($this->assets));
+        } elseif (is_string($this->assets)) {
+            return base64_encode($this->assets);
+        }
+        return null;
+    }
+
+
     #[Route('/platbyname', name: 'platByName', methods: ['GET'])]
     public function getPlatByName(Request $request, RecetteRepository $platRepository): JsonResponse    
     {
@@ -136,12 +159,16 @@ class SakafoController extends AbstractController
         }
     
         $data = array_map(fn(Recette $plat) => [
+            'id' => $plat->getId(),
             'nom' => $plat->getNom(),
-        ], $plat);
+            'prix' => $plat->getPrix(),
+            'temps_cuisson' => $plat->getTempsCuisson(),
+            'photo' => $plat->getP(),
+            'assets' => $plat->getA()
+        ], $plat);        
     
         return new JsonResponse($data);
     }
-    
 
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
