@@ -26,8 +26,6 @@ class IngredientRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
-    
 
     public function AllIngredient(): array
     {
