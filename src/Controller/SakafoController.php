@@ -129,7 +129,7 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
         }
     
-        $plat = $ingredientRepository->findPlatByName($nom);
+        $plat = $platRepository->findPlatByName($nom);
     
         if (!$plat) {
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
