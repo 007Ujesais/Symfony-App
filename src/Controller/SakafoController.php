@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\RecetteRepository;
+use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

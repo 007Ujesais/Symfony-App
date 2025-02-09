@@ -25,6 +25,16 @@ class RecetteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findPlatByName(string $nom): array
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('LOWER(i.nom) LIKE LOWER(:nom)')
+            ->setParameter('nom', $nom . '%')
+            ->orderBy('i.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findRecetteById(int $id): ?Recette
     {
         return $this->createQueryBuilder('r')
