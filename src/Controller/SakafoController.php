@@ -1,13 +1,12 @@
 <?php
+
 namespace App\Controller;
 
-use App\Entity\Ingredient;
-use App\Entity\Recette;
-use App\Entity\Stock;
 use App\Repository\RecetteRepository;
 use App\Repository\VenteRepository;
 use App\Repository\StockRepository;
 use App\Repository\IngredientRepository;
+use App\Repository\Ingredient;
 use App\Repository\RecetteIngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,11 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 class SakafoController extends AbstractController
 {
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
-    public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
-    {
-        $recettes = $recetteRepository->AllRecettes();
-        return $this->json($recettes, 200, [], []);
-    }
+public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
+{
+    $recettes = $recetteRepository->AllRecettes();
+
+    return $this->json($recettes, 200, [], []);
+}
 
     #[Route('/ventes', name: 'getVentes', methods: ['GET'])]
     public function getAllVentes(VenteRepository $venteRepository): JsonResponse
@@ -84,13 +84,9 @@ class SakafoController extends AbstractController
         $response->headers->set('Access-Control-Allow-Methods', 'POST');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
     
-        $nom = $request->request->get('nom');
+        $nom = $request->request->get('nomingredient') ?? null;
         $photo = $request->files->get('photo');
         $assets = $request->files->get('assets');
-    
-        if (!$nom || !$photo || !$assets) {
-            return new JsonResponse(['error' => 'Missing data'], 400);
-        }
     
         try {
             $ingredient = $ingredientRepository->insertIngredient($nom, $photo, $assets);
@@ -98,6 +94,7 @@ class SakafoController extends AbstractController
         }  catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
+    
         return $response;
     }
 
@@ -116,7 +113,7 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(function (Ingredient $ingredient) {
+        $data = array_map(function (IngredientRepository $ingredient) {
             return [
                 'id' => $ingredient->getId(),
                 'nom' => $ingredient->getNom(),
@@ -128,27 +125,7 @@ class SakafoController extends AbstractController
         return new JsonResponse($data);
     }
 
-    public function getPhoto(): ?string
-    {
-        if (is_resource($this->photo)) {
-            rewind($this->photo);
-            return base64_encode(stream_get_contents($this->photo));
-        } elseif (is_string($this->photo)) {
-            return base64_encode($this->photo);
-        }
-        return null;
-    }
-
-    public function getAssets(): ?string
-    {
-        if (is_resource($this->assets)) {
-            rewind($this->assets);
-            return base64_encode(stream_get_contents($this->assets));
-        } elseif (is_string($this->assets)) {
-            return base64_encode($this->assets);
-        }
-        return null;
-    }
+    
 
 
     #[Route('/platbyname', name: 'platByName', methods: ['GET'])]
@@ -166,7 +143,7 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(fn(Recette $plat) => [
+        $data = array_map(fn(RecetteRepository $plat) => [
             'id' => $plat->getId(),
             'nom' => $plat->getNom(),
             'prix' => $plat->getPrix(),
