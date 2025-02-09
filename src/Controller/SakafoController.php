@@ -206,6 +206,9 @@ class SakafoController extends AbstractController
         $recetteId = $request->request->get('dishId');
         $ingredients = $request->request->get('ingredients');
     
+        error_log('dishId: ' . $recetteId);
+        error_log('ingredients: ' . $ingredients);
+    
         if (!$recetteId || !$ingredients) {
             return new JsonResponse(['error' => 'Les paramètres "dishId" et "ingredients" sont requis.'], 400);
         }
@@ -218,15 +221,18 @@ class SakafoController extends AbstractController
                     return new JsonResponse(['error' => 'Chaque ingrédient doit avoir un "ingredientId" et une "quantity".'], 400);
                 }
     
+                error_log('Ingrédient: ' . print_r($ingredient, true));
+    
                 $this->recetteIngredientRepository->insertRecette(
                     $recetteId,
-                    $ingredient['ingredientId'], 
+                    $ingredient['ingredientId'],
                     $ingredient['quantity']
                 );
             }
     
             return new JsonResponse(['message' => 'RecetteIngredient créé avec succès.'], 201);
         } catch (\Exception $e) {
+            error_log('Exception: ' . $e->getMessage());
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
     }

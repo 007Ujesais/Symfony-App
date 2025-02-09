@@ -21,8 +21,10 @@ class RecetteIngredientRepository extends ServiceEntityRepository
 
     public function insertRecette(int $recetteId, int $ingredientId, int $quantity): void
     {
-        $recette = $this->getEntityManager()->getRepository(Recette::class)->find($recetteId);
-        $ingredient = $this->getEntityManager()->getRepository(Ingredient::class)->find($ingredientId);
+        $entityManager = $this->getEntityManager();
+    
+        $recette = $entityManager->getRepository(Recette::class)->find($recetteId);
+        $ingredient = $entityManager->getRepository(Ingredient::class)->find($ingredientId);
     
         if (!$recette || !$ingredient) {
             throw new \Exception('Recette ou Ingredient non trouvé.');
@@ -33,7 +35,7 @@ class RecetteIngredientRepository extends ServiceEntityRepository
         $recetteIngredient->setIngredient($ingredient);
         $recetteIngredient->setNombre($quantity);
     
-        $this->getEntityManager()->persist($recetteIngredient);
-        $this->getEntityManager()->flush();
+        $entityManager->persist($recetteIngredient);
+        $entityManager->flush();
     }
 }
