@@ -135,12 +135,14 @@ class SakafoController extends AbstractController
             return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        $data = array_map(function (Ingredient $ingredient) {
+        $data = array_map(function (Recette $plat) {
             return [
-                'id' => $ingredient->getId(),
-                'nom' => $ingredient->getNom(),
-                'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
-                'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
+                'id' => $plat->getId(),
+                'nom' => $plat->getNom(),
+                'prix' => $plat->getPrix(),
+                'temps_cuisson' => $plat->getTempsCuisson(),
+                'photo' => $plat->getPhoto() ? base64_encode(stream_get_contents($plat->getPhoto())) : null,
+                'assets' => $plat->getAssets() ? base64_encode(stream_get_contents($plat->getAssets())) : null
             ];
         }, $plat);
     
