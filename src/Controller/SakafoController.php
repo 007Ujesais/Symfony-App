@@ -203,7 +203,7 @@ class SakafoController extends AbstractController
     #[Route('/creerecette', name: 'creerecette', methods: ['POST'])]
     public function createRecette(Request $request): JsonResponse
     {
-        $recetteId = $request->request->get('idPlat');
+        $recetteId = $request->request->get('dishId');
         $ingredients = $request->request->get('ingredients');
 
         if (!$recetteId || !$ingredients) {
@@ -211,11 +211,14 @@ class SakafoController extends AbstractController
         }
 
         try {
-            // Convertir les ingrédients en tableau
             $ingredients = json_decode($ingredients, true);
 
             foreach ($ingredients as $ingredient) {
-                $this->recetteIngredientRepository->insertRecetteIngredient(
+                if (!isset($ingredient['ingredientId']) || !isset($ingredient['quantity'])) {
+                    return new JsonResponse(['error' => 'Chaque ingrédient doit avoir un "ingredientId" et une "quantity".'], 400);
+                }
+
+                $this->recetteIngredientRepository->insertRecette(
                     $recetteId,
                     $ingredient['ingredientId'],
                     $ingredient['quantity']
