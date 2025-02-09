@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Controller;
 
+use App\Entity\Ingredient;
 use App\Repository\RecetteRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\RecetteIngredientRepository;
@@ -94,18 +94,26 @@ class SakafoController extends AbstractController
     public function getIngredientByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         $nom = $request->query->get('nom');
-        if (is_null($nom)) {
-            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], Response::HTTP_BAD_REQUEST);
+    
+        if (!$nom) {
+            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
         }
     
-        $ingredient = $ingredientRepository->findIngredientByName($nom);
+        $ingredients = $ingredientRepository->findIngredientsByName($nom);
     
-        if (empty($ingredient)) {
-            return new JsonResponse(['message' => 'Aucun ingrédient trouvé avec ce nom.'], Response::HTTP_NOT_FOUND);
+        if (!$ingredients) {
+            return new JsonResponse(['error' => 'Aucun ingrédient trouvé.'], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        return $this->json($ingredient);
+        $data = array_map(function (Ingredient $ingredient) {
+            return [
+                'id' => $ingredient->getId(),
+                'nom' => $ingredient->getNom(),
+                'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
+                'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
+            ];
+        }, $ingredients);
+    
+        return new JsonResponse($data);
     }
-    
-
 }
