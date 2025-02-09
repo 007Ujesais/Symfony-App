@@ -13,12 +13,25 @@ class VenteRepository extends ServiceEntityRepository
         parent::__construct($registry, Vente::class);
     }
 
-    public function Allvente(): array
+    public function AllVentes(): array
     {
         return $this->createQueryBuilder('v')
-            ->leftJoin('v.recette', 'r')
-            ->addSelect('r') 
-            ->orderBy('v.dateAchat', 'DESC')
+            ->select('DISTINCT r')
+            ->innerJoin('v.recette', 'r') 
+            ->orderBy('r.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findVenteByName(string $nom): array
+    {
+        return $this->createQueryBuilder('v')
+            ->innerJoin('v.recette', 'r')
+            ->addSelect('r')
+            ->andWhere('LOWER(r.nom) LIKE LOWER(:nom)')
+            ->setParameter('nom', $nom . '%')
+            ->groupBy('r.id')
+            ->orderBy('r.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }
