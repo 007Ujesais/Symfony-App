@@ -119,6 +119,35 @@ class SakafoController extends AbstractController
         return new JsonResponse($data);
     }
 
+    #[Route('/platbyname', name: 'ingredientByName', methods: ['GET'])]
+    public function getPlatByName(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        $nom = $request->query->get('nom');
+    
+        if (!$nom) {
+            return new JsonResponse(['error' => 'Le paramètre "nom" est requis.'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+    
+        $plat = $ingredientRepository->findPlatByName($nom);
+    
+        if (!$plat) {
+            return new JsonResponse(['error' => 'Aucun plat trouvé.'], JsonResponse::HTTP_NOT_FOUND);
+        }
+    
+        $data = array_map(function (Ingredient $ingredient) {
+            return [
+                'id' => $ingredient->getId(),
+                'nom' => $ingredient->getNom(),
+                'nom' => $ingredient->getPrix(),
+                'nom' => $ingredient->getTempsCuisson(),
+                'photo' => $ingredient->getPhoto() ? base64_encode(stream_get_contents($ingredient->getPhoto())) : null,
+                'assets' => $ingredient->getAssets() ? base64_encode(stream_get_contents($ingredient->getAssets())) : null
+            ];
+        }, $plat);
+    
+        return new JsonResponse($data);
+    }
+
     #[Route('/stockingredient', name: 'updateStock', methods: ['POST'])]
     public function updateStock(Request $request, StockRepository $stockRepository): JsonResponse
     {
