@@ -19,25 +19,21 @@ class RecetteIngredientRepository extends ServiceEntityRepository
         $this->params = $params;
     }
 
-    public function insertRecette(int $recetteId, int $ingredientId, int $quantity): RecetteIngredient
+    public function insertRecette(int $recetteId, int $ingredientId, int $quantity): void
     {
-        $entityManager = $this->getEntityManager();
-
-        $recette = $entityManager->getRepository(Recette::class)->find($recetteId);
-        $ingredient = $entityManager->getRepository(Ingredient::class)->find($ingredientId);
-
+        $recette = $this->getEntityManager()->getRepository(Recette::class)->find($recetteId);
+        $ingredient = $this->getEntityManager()->getRepository(Ingredient::class)->find($ingredientId);
+    
         if (!$recette || !$ingredient) {
             throw new \Exception('Recette ou Ingredient non trouvé.');
         }
-
+    
         $recetteIngredient = new RecetteIngredient();
         $recetteIngredient->setRecette($recette);
         $recetteIngredient->setIngredient($ingredient);
         $recetteIngredient->setNombre($quantity);
-
-        $entityManager->persist($recetteIngredient);
-        $entityManager->flush();
-
-        return $recetteIngredient;
+    
+        $this->getEntityManager()->persist($recetteIngredient);
+        $this->getEntityManager()->flush();
     }
 }
