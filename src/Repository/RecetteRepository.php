@@ -29,7 +29,7 @@ class RecetteRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('i')
             ->andWhere('LOWER(i.nom) LIKE LOWER(:nom)')
-            ->setParameter('nom', $nom . '%')
+            ->setParameter('nom','%'. $nom . '%')
             ->orderBy('i.nom', 'ASC')
             ->getQuery()
             ->getResult();
