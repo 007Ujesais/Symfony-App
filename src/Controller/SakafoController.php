@@ -21,12 +21,19 @@ use Symfony\Component\HttpFoundation\Response;
 class SakafoController extends AbstractController
 {
     #[Route('/recettes', name: 'getRecettes', methods: ['GET'])]
-public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
-{
-    $recettes = $recetteRepository->AllRecettes();
+    public function getAllRecettes(RecetteRepository $recetteRepository): JsonResponse
+    {
+        $recettes = $recetteRepository->AllRecettes();
 
-    return $this->json($recettes, 200, [], []);
-}
+        return $this->json($recettes, 200, [], []);
+    }
+
+    #[Route('/ventesparmois', name: 'ventes_by_month', methods: ['GET'])]
+    public function getVentesByMonth(VenteRepository $venteRepository): JsonResponse
+    {
+        $ventesByMonth = $venteRepository->getVentesByMonth();
+        return $this->json($ventesByMonth);
+    }
 
     #[Route('/ventes', name: 'getVentes', methods: ['GET'])]
     public function getAllVentes(VenteRepository $venteRepository): JsonResponse

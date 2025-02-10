@@ -24,6 +24,17 @@ class VenteRepository extends ServiceEntityRepository
             ->getResult();
     }
     
+    public function getVentesByMonth(): array
+    {
+        return $this->createQueryBuilder('v')
+            ->innerJoin('v.recette', 'r')
+            ->addSelect('r')
+            ->select('EXTRACT(YEAR FROM v.dateAchat) as year, EXTRACT(MONTH FROM v.dateAchat) as month, SUM(r.prix) as totalPrix, COUNT(v.id) as totalVentes')
+            ->groupBy('year, month')
+            ->orderBy('year, month', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     
     
     public function findVenteByName(string $nom): array
