@@ -28,6 +28,19 @@ class SakafoController extends AbstractController
         return $this->json($recettes, 200, [], []);
     }
 
+    #[Route('/ventesparnom/{nom}', name: 'venteparnom', methods: ['GET'])]
+    public function getVentesByRecette(string $nom, VenteRepository $venteRepository): JsonResponse
+    {
+        $result = $venteRepository->getVentesByRecette($nom);
+
+        if (!$result) {
+            return $this->json(['message' => 'Aucune vente trouvée pour cette recette'], 404);
+        }
+
+        return $this->json($result);
+    }
+
+
     #[Route('/ventesparmois', name: 'ventes_by_month', methods: ['GET'])]
     public function getVentesByMonth(VenteRepository $venteRepository): JsonResponse
     {

@@ -36,6 +36,19 @@ class VenteRepository extends ServiceEntityRepository
             ->getResult();
     }
     
+    public function getVentesByRecette(string $nom): array
+    {
+        return $this->createQueryBuilder('v')
+            ->innerJoin('v.recette', 'r')
+            ->addSelect('r')
+            ->select('r.nom, SUM(r.prix) as totalPrix, COUNT(v.id) as totalVentes')
+            ->where('LOWER(r.nom) LIKE LOWER(:nom)')
+            ->setParameter('nom', $nom . '%')
+            ->groupBy('r.nom')
+            ->getQuery()
+            ->getSingleResult();
+    }
+
     
     public function findVenteByName(string $nom): array
     {
