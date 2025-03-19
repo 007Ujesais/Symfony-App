@@ -29,7 +29,7 @@ class SakafoController extends AbstractController
     }
 
     #[Route('/ventesparnom/{nom}', name: 'venteparnom', methods: ['GET'])]
-    public function getVentesByRecette(string $nom, VenteRepository $venteRepository): JsonResponse
+    public function getVentesParNom(string $nom, VenteRepository $venteRepository): JsonResponse
     {
         $result = $venteRepository->getVentesByRecette($nom);
 
