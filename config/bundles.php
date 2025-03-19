@@ -11,4 +11,5 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     ApiPlatform\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
+    SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle::class => ['all' => true],
 ];
