@@ -15,6 +15,8 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
+                username_parameter: "email"  # Champ pour l'email/username
+                password_parameter: "password"  # Champ pour le mot de passe
                 login_path: app_login
                 check_path: app_login
                 default_target_path: app_home

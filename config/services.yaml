@@ -7,12 +7,15 @@ parameters:
     recettes_directory: './uploads/recettes'
     assets_directory: './uploads/assets'
 services:
+    # Configuration par défaut pour les services
+    _defaults:
+        autowire: false
+        autoconfigure: true
+
+    # Configuration explicite pour GoogleAnalyticsService
     App\Service\GoogleAnalyticsService:
         arguments:
-            $credentialsPath: '%kernel.project_dir%/config/google_credentials.json'
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+             factory: ['App\Service\GoogleAnalyticsServiceFactory', 'create']
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
