@@ -31,7 +31,7 @@ class RegistrationController extends AbstractController
         $user = new User();
         $user->setEmail($data['email']);
         $user->setPassword($userPasswordHasher->hashPassword($user, $data['password']));
-        $user->setRoles(['ROLE_USER']); // Par défaut, tous les utilisateurs ont le rôle ROLE_USER
+        $user->setRoles(['ROLE_USER']); 
 
         $entityManager->persist($user);
         $entityManager->flush();
